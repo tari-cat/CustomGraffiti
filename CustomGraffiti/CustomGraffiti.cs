@@ -95,19 +95,19 @@ namespace CustomGraffiti
 
             if (loader == null)
             {
-                Debug.LogWarning("GraffitiLoader was null.");
+                CustomGraffitiMod.Log.LogWarning("GraffitiLoader was null.");
                 return;
             }
 
             if (loader.GraffitiArtInfo == null)
             {
-                Debug.LogWarning("GraffitiArtInfo was null.");
+                CustomGraffitiMod.Log.LogWarning("GraffitiArtInfo was null.");
                 return;
             }
 
             if (loader.GraffitiArtInfo.graffitiArt == null)
             {
-                Debug.LogWarning("graffitiArt List was null.");
+                CustomGraffitiMod.Log.LogWarning("graffitiArt List was null.");
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace CustomGraffiti
             {
                 if (art == Art)
                 {
-                    Debug.LogWarning("This custom graffiti is already in the graffiti art info. Returning.");
+                    CustomGraffitiMod.Log.LogWarning("This custom graffiti is already in the graffiti art info. Returning.");
                     return;
                 }
             }
@@ -134,7 +134,7 @@ namespace CustomGraffiti
 
             if (loader == null)
             {
-                Debug.LogWarning("Failed to fix shader graffiti.");
+                CustomGraffitiMod.Log.LogWarning("Failed to fix shader graffiti.");
                 return;
             }
 
@@ -146,13 +146,13 @@ namespace CustomGraffiti
         {
             if (Core.Instance == null)
             {
-                //Debug.LogWarning("Core instance not initialized yet.");
+                //CustomGraffitiMod.Log.LogWarning("Core instance not initialized yet.");
                 return null;
             }
 
             if (Core.Instance.Assets == null)
             {
-                Debug.LogWarning("Core Assets not initialized yet.");
+                CustomGraffitiMod.Log.LogWarning("Core Assets not initialized yet.");
                 return null;
             }
 

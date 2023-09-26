@@ -18,6 +18,8 @@ namespace CustomGraffiti
 
         public static List<CustomGraffiti> LoadedGraffiti;
 
+        public static BepInEx.Logging.ManualLogSource Log => _modInstance.Logger;
+
         public CustomGraffitiMod()
         {
             _modInstance = this;
@@ -25,10 +27,7 @@ namespace CustomGraffiti
             LoadedGraffiti = new List<CustomGraffiti>();
         }
 
-        private void Awake()
-        {
-            _harmonyInstance?.PatchAll();
-        }
+        // Add Graffiti
 
         public static CustomGraffiti AddCustomGraffitiFromFilePath(string filePath)
         {
@@ -60,6 +59,46 @@ namespace CustomGraffiti
         public static CustomGraffiti AddCustomGraffitiFromFilePath(string filePath, GraffitiSize size)
         {
             string fileName = Path.GetFileNameWithoutExtension(filePath);
+            string ext = Path.GetExtension(filePath);
+
+            //
+            string[] name = fileName.Split('_');
+
+            string graffitiName;
+            GraffitiArt.Combos graffitiCombo = GraffitiArt.Combos.NONE;
+
+            if (name.Length >= 2)
+            {
+                string comboString = name[0];
+                GraffitiArt.Combos combo = ParseCombo(comboString);
+
+                graffitiCombo = combo;
+                graffitiName = string.Join("_", name, 1, name.Length - 1);
+            }
+            else
+            {
+                graffitiName = fileName;
+            }
+
+            // If our graffiti is invalid
+            if (graffitiCombo == GraffitiArt.Combos.NONE && size != GraffitiSize.S)
+            {
+                string combo = "";
+                switch (size)
+                {
+                    case GraffitiSize.M:
+                        combo = "1234";
+                        break;
+                    case GraffitiSize.L:
+                        combo = "12345";
+                        break;
+                    case GraffitiSize.XL:
+                        combo = "123456";
+                        break;
+                }
+                Log.LogError($"Unable to add graffiti {fileName}. Graffiti larger than small graffiti need a combo in the file name, such as '{combo}_{fileName}{ext}'. The underscore to separate the combo from the name is required!");
+                return null;
+            }
 
             // get texture -- if invalid we can't make a custom graffiti
             Texture2D texture = LoadTexture(filePath);
@@ -70,71 +109,18 @@ namespace CustomGraffiti
             // create our new custom graffiti instance
             CustomGraffiti graffiti = new CustomGraffiti();
 
+            graffiti.Name = graffitiName;
+
+            graffiti.Combo = graffitiCombo;
+
             // apply the texture to our instance
             graffiti.Texture = texture;
 
             // user specified size, override folder path
             graffiti.Size = size;
 
-            //
-            string[] name = fileName.Split('_');
-
-            if (name.Length >= 2)
-            {
-                string comboString = name[0];
-                GraffitiArt.Combos combo = ParseCombo(comboString);
-
-                graffiti.Combo = combo;
-                graffiti.Name = string.Join("_", name, 1, name.Length - 1);
-            }
-            else
-            {
-                graffiti.Name = fileName;
-            }
-
             LoadedGraffiti.Add(graffiti);
             return graffiti;
-        }
-
-        public static GraffitiArt.Combos ParseCombo(string numericComboString)
-        {
-            if (int.TryParse(numericComboString, out int combo))
-            {
-                GraffitiArt.Combos comboEnum = (GraffitiArt.Combos)combo;
-
-                if (Enum.IsDefined(typeof(GraffitiArt.Combos), comboEnum))
-                {
-                    return comboEnum;
-                }
-            }
-
-            return GraffitiArt.Combos.NONE;
-        }
-
-        public static Texture2D LoadTexture(string filePath)
-        {
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
-
-            string ext = Path.GetExtension(filePath);
-
-            if (ext != ".jpg" && ext != ".png")
-            {
-                Instance.Logger.LogWarning($"Cannot load graffiti: {fileName}{ext}. Only .png and .jpg files are accepted.");
-                return null;
-            }
-
-            Texture2D tex = new Texture2D(2, 2);
-            if (tex.LoadImage(File.ReadAllBytes(filePath)))
-            {
-                tex.Apply();
-
-                Instance.Logger.LogInfo($"Custom graffiti {fileName}{ext} loaded.");
-
-                return tex;
-            }
-
-            Instance.Logger.LogWarning($"Could not load image data of {fileName}{ext}.");
-            return null;
         }
 
         // API
@@ -184,6 +170,49 @@ namespace CustomGraffiti
             return list;
         }
 
+        // Utility
+
+        public static Texture2D LoadTexture(string filePath)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+
+            string ext = Path.GetExtension(filePath);
+
+            if (ext != ".jpg" && ext != ".png")
+            {
+                Instance.Logger.LogWarning($"Cannot load graffiti: {fileName}{ext}. Only .png and .jpg files are accepted.");
+                return null;
+            }
+
+            Texture2D tex = new Texture2D(2, 2);
+            if (tex.LoadImage(File.ReadAllBytes(filePath)))
+            {
+                tex.Apply();
+
+                Instance.Logger.LogInfo($"Custom graffiti {fileName}{ext} loaded.");
+
+                return tex;
+            }
+
+            Instance.Logger.LogWarning($"Could not load image data of {fileName}{ext}.");
+            return null;
+        }
+
+        public static GraffitiArt.Combos ParseCombo(string numericComboString)
+        {
+            if (int.TryParse(numericComboString, out int combo))
+            {
+                GraffitiArt.Combos comboEnum = (GraffitiArt.Combos)combo;
+
+                if (Enum.IsDefined(typeof(GraffitiArt.Combos), comboEnum))
+                {
+                    return comboEnum;
+                }
+            }
+
+            return GraffitiArt.Combos.NONE;
+        }
+
         // Framerate stuff
 
 
@@ -191,52 +220,6 @@ namespace CustomGraffiti
 
         private GraffitiLoader _loaderInstance;
         private bool _initialized = false;
-
-        private void Update()
-        {
-            // framerate check
-
-            if (Application.targetFrameRate != _desiredFramerate)
-            {
-                Logger.LogInfo($"Forcing framerate to {_desiredFramerate}");
-                Application.targetFrameRate = _desiredFramerate;
-            }
-
-
-            // Setup Loader Instance
-            if (_loaderInstance == null)
-            {
-                _initialized = false;
-                LoadedGraffiti.Clear();
-                GraffitiLoader loader = CustomGraffiti.GetGraffitiLoader();
-
-                if (loader == null)
-                {
-                    return;
-                }
-                else
-                {
-                    _loaderInstance = loader;
-                }
-            }
-
-            if (_loaderInstance.GraffitiArtInfo != null)
-            {
-                if (_loaderInstance.GraffitiArtInfo.graffitiArt != null && !_initialized)
-                {
-                    Initialize();
-                    _initialized = true;
-                }
-                else if (_loaderInstance.GraffitiArtInfo.graffitiArt == null)
-                {
-                    Uninitialize();
-                }
-            }
-            else
-            {
-                Uninitialize();
-            }
-        }
 
         private void Uninitialize()
         {
@@ -246,7 +229,7 @@ namespace CustomGraffiti
             }
 
             _initialized = false;
-            Debug.LogWarning("Uninitialized.");
+            Log.LogWarning("Uninitialized.");
             LoadedGraffiti.Clear();
         }
 
@@ -257,7 +240,7 @@ namespace CustomGraffiti
                 return;
             }
 
-            Debug.LogWarning("Initialized.");
+            Log.LogWarning("Initialized.");
 
             string dir = Path.GetDirectoryName(Info.Location);
             string graffitiFolder = "Graffiti";
@@ -306,7 +289,7 @@ namespace CustomGraffiti
 
             foreach (CustomGraffiti customGraffiti in LoadedGraffiti)
             {
-                Logger.LogInfo($"{customGraffiti.Name} ({customGraffiti.Texture}), Size: {customGraffiti.Size}, Combo: {customGraffiti.Combo}, SO: {customGraffiti.AppEntry}");
+                Logger.LogInfo($"{customGraffiti.Name}, Size: {customGraffiti.Size}, Combo: {customGraffiti.Combo}");
                 customGraffiti.FixShader();
                 customGraffiti.AddToGraffitiArtInfo();
             }
@@ -316,9 +299,71 @@ namespace CustomGraffiti
             Logger.LogInfo("Plugin Custom Graffiti successfully initialized.");
         }
 
+        // Unity Functions
+
+        private void Awake()
+        {
+            _harmonyInstance?.PatchAll();
+
+            /*
+            var methods = _harmonyInstance.GetPatchedMethods();
+            foreach (var method in methods)
+            {
+                Logger.LogInfo($"Patched: {method.Name}");
+            }
+            */
+        }
+
         private void OnDestroy()
         {
             _harmonyInstance?.UnpatchSelf();
+            LoadedGraffiti.Clear();
+        }
+
+        private void Update()
+        {
+            // framerate check
+
+            if (Application.targetFrameRate != _desiredFramerate)
+            {
+                Logger.LogInfo($"Forcing framerate to {_desiredFramerate}");
+                Application.targetFrameRate = _desiredFramerate;
+            }
+
+
+            // Setup Loader Instance
+            if (_loaderInstance == null)
+            {
+                _initialized = false;
+                LoadedGraffiti.Clear();
+                GraffitiLoader loader = CustomGraffiti.GetGraffitiLoader();
+
+                if (loader == null)
+                {
+                    return;
+                }
+                else
+                {
+                    _loaderInstance = loader;
+                }
+            }
+
+            if (_loaderInstance.GraffitiArtInfo != null)
+            {
+                if (_loaderInstance.GraffitiArtInfo.graffitiArt != null && !_initialized)
+                {
+                    Initialize();
+                    _initialized = true;
+                }
+                else if (_loaderInstance.GraffitiArtInfo.graffitiArt == null)
+                {
+                    Uninitialize();
+                }
+            }
+            else
+            {
+                Uninitialize();
+            }
         }
     }
 }

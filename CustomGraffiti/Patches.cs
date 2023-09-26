@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Reflection;
+using Reptile.Phone;
 
 namespace CustomGraffiti
 {
@@ -17,6 +18,7 @@ namespace CustomGraffiti
         [HarmonyPatch(typeof(GraffitiGame), "SetState")]
         class Patch_GraffitiGame_SetState
         {
+            [HarmonyPrefix]
             static bool Prefix(GraffitiGame __instance, GraffitiGameState setState)
             {
                 if (setState != GraffitiGameState.SHOW_PIECE)
@@ -148,6 +150,7 @@ namespace CustomGraffiti
         [HarmonyPatch(typeof(GraffitiArtInfo), "GetAvailableTargets")]
         class Patch_GraffitiArtInfo_GetAvailableTargets
         {
+            [HarmonyPrefix]
             static bool Prefix(GraffitiArtInfo __instance, List<GraffitiArt> unlockedGraffitiArt, List<int> targetSequence, GraffitiSize grafSize, ref int __result)
             {
                 // this is mostly decomp aka unreadable!!!
@@ -199,6 +202,46 @@ namespace CustomGraffiti
 
                 __result = sequence;
                 return false;
+            }
+        }
+
+        // AppGraffiti
+
+        // void RefreshList
+        // Goal: Add app entries.
+        [HarmonyPatch(typeof(AppGraffiti), "RefreshList")]
+        class Patch_AppGraffiti_RefreshList
+        {
+            [HarmonyPostfix]
+            static void Postfix(AppGraffiti __instance)
+            {
+                List<GraffitiAppEntry> graffitiList = Traverse.Create(__instance).Property("GraffitiArt").GetValue<List<GraffitiAppEntry>>();
+
+                GraffitiScrollView m_ScrollView = Traverse.Create(__instance).Field("m_ScrollView").GetValue<GraffitiScrollView>();
+
+                List<CustomGraffiti> customGraffiti = CustomGraffitiMod.LoadedGraffiti;
+                
+                for (int i = 0; i < customGraffiti.Count; i++)
+                {
+                    CustomGraffiti graffiti = customGraffiti[i];
+                
+                    if (graffiti.Size == GraffitiSize.S)
+                        continue;
+                
+                    if (graffiti.AppEntry == null)
+                    {
+                        CustomGraffitiMod.Log.LogWarning($"Cannot create app entry for {graffiti.Name}.");
+                        continue;
+                    }
+                
+                    graffitiList.Add(graffiti.AppEntry);
+                }
+
+                Traverse.Create(__instance).Property("GraffitiArt").SetValue(graffitiList);
+                
+                m_ScrollView.SetListContent(graffitiList.Count);
+                
+                Traverse.Create(__instance).Field("m_ScrollView").SetValue(m_ScrollView);
             }
         }
     }

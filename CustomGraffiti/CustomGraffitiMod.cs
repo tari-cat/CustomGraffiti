@@ -189,7 +189,7 @@ namespace CustomGraffiti
             {
                 tex.Apply();
 
-                Instance.Logger.LogInfo($"Custom graffiti {fileName}{ext} loaded.");
+                //Instance.Logger.LogInfo($"Custom graffiti {fileName}{ext} loaded.");
 
                 return tex;
             }
@@ -283,18 +283,12 @@ namespace CustomGraffiti
                 AddCustomGraffitiFromFilePath(file);
             }
 
-            //Logger.LogInfo("------------------------");
-
-            Logger.LogInfo("Loaded custom graffiti:");
-
             foreach (CustomGraffiti customGraffiti in LoadedGraffiti)
             {
                 Logger.LogInfo($"{customGraffiti.Name}, Size: {customGraffiti.Size}, Combo: {customGraffiti.Combo}");
                 customGraffiti.FixShader();
                 customGraffiti.AddToGraffitiArtInfo();
             }
-
-            //Logger.LogInfo("------------------------");
 
             Logger.LogInfo("Plugin Custom Graffiti successfully initialized.");
         }
@@ -304,6 +298,8 @@ namespace CustomGraffiti
         private void Awake()
         {
             _harmonyInstance?.PatchAll();
+
+            Logger.LogInfo("Plugin Custom Graffiti patched successfully.");
 
             /*
             var methods = _harmonyInstance.GetPatchedMethods();
@@ -322,7 +318,9 @@ namespace CustomGraffiti
 
         private void Update()
         {
-            // framerate check
+            // Turns out BRC doesn't really cap your framerate, so your GPU will become a space heater
+            // This bit of code does cap your framerate. Reason it's in here is because for some reason it gets updated twice.
+            // This bit of code will essentially set your framerate to your max available framerate depending on your screen's refresh rate.
 
             if (Application.targetFrameRate != _desiredFramerate)
             {
@@ -330,12 +328,17 @@ namespace CustomGraffiti
                 Application.targetFrameRate = _desiredFramerate;
             }
 
+            // For context, since I'm using an older version of .NET Framework (4.7.2), I don't have access to "On" for events.
+            // This update loop will simply check if there's a graffiti loader instance available, if it is, we inject and load our graffiti into it.
+            // This happens basically every time we load a new area of the game, so it refreshes often.
+            // It's not great, but it works.
 
             // Setup Loader Instance
-            if (_loaderInstance == null)
+
+
+            if (_loaderInstance == null) // uninitialize if we haven't received our graffiti loader
             {
-                _initialized = false;
-                LoadedGraffiti.Clear();
+                Uninitialize();
                 GraffitiLoader loader = CustomGraffiti.GetGraffitiLoader();
 
                 if (loader == null)
@@ -345,22 +348,24 @@ namespace CustomGraffiti
                 else
                 {
                     _loaderInstance = loader;
+                    // cool, we have the graffiti loader
+                    // now we wait until graffiti info is available
                 }
             }
 
-            if (_loaderInstance.GraffitiArtInfo != null)
+            if (_loaderInstance.GraffitiArtInfo != null) // we have our graffiti info!
             {
-                if (_loaderInstance.GraffitiArtInfo.graffitiArt != null && !_initialized)
+                if (_loaderInstance.GraffitiArtInfo.graffitiArt != null && !_initialized) // we have an available list, and we need to initialize once
                 {
                     Initialize();
                     _initialized = true;
                 }
-                else if (_loaderInstance.GraffitiArtInfo.graffitiArt == null)
+                else if (_loaderInstance.GraffitiArtInfo.graffitiArt == null) // if the list is suddenly null, uninitialize
                 {
                     Uninitialize();
                 }
             }
-            else
+            else // initialize if our graffiti info instance is destroyed (asset bundle is unloaded)
             {
                 Uninitialize();
             }

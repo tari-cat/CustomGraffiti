@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using CustomGraffiti.Plugin;
 
 namespace CustomGraffiti
 {
-    [BepInPlugin("dance.tari.bombrushcyberfunk.customgraffiti", "CustomGraffiti", "0.0.0.1")]
+    [BepInPlugin(PluginMetadata.GUID, PluginMetadata.Name, PluginMetadata.Version)]
     [BepInProcess("Bomb Rush Cyberfunk.exe")]
     public class CustomGraffitiMod : BaseUnityPlugin
     {
@@ -23,7 +24,7 @@ namespace CustomGraffiti
         public CustomGraffitiMod()
         {
             _modInstance = this;
-            _harmonyInstance = new Harmony("dance.tari.bombrushcyberfunk.customgraffiti.patch");
+            _harmonyInstance = new Harmony($"{PluginMetadata.GUID}.patch");
             LoadedGraffiti = new List<CustomGraffiti>();
         }
 

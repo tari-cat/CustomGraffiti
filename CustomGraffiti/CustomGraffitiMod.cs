@@ -214,11 +214,6 @@ namespace CustomGraffiti
             return GraffitiArt.Combos.NONE;
         }
 
-        // Framerate stuff
-
-
-        private int _desiredFramerate = Screen.currentResolution.refreshRate + 1;
-
         private GraffitiLoader _loaderInstance;
         private bool _initialized = false;
 
@@ -319,16 +314,6 @@ namespace CustomGraffiti
 
         private void Update()
         {
-            // Turns out BRC doesn't really cap your framerate, so your GPU will become a space heater
-            // This bit of code does cap your framerate. Reason it's in here is because for some reason it gets updated twice.
-            // This bit of code will essentially set your framerate to your max available framerate depending on your screen's refresh rate.
-
-            if (Application.targetFrameRate != _desiredFramerate)
-            {
-                Logger.LogInfo($"Forcing framerate to {_desiredFramerate}");
-                Application.targetFrameRate = _desiredFramerate;
-            }
-
             // For context, since I'm using an older version of .NET Framework (4.7.2), I don't have access to "On" for events.
             // This update loop will simply check if there's a graffiti loader instance available, if it is, we inject and load our graffiti into it.
             // This happens basically every time we load a new area of the game, so it refreshes often.

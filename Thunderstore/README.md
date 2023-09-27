@@ -1,4 +1,3 @@
-﻿
 ## Custom Graffiti
 This mod adds custom graffiti in BRC by simply adding images to folders.
 The mod supports .jpg and .png files.

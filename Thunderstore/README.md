@@ -1,14 +1,14 @@
 ## Custom Graffiti
-This mod adds custom graffiti in BRC by simply adding images to folders.
-The mod supports .jpg and .png files.
+This mod adds custom graffiti in BRC by simply adding images to folders. <br/>
+The mod supports **.jpg** and **.png** files.
 
 ### How to add Graffiti
-In the mod folder, `BepInEx/plugins/CustomGraffiti`, there's a `Graffiti` folder.
-In the `Graffiti` folder, you can place your images into four different folders (`Small`, `Medium`, `Large`, and `ExtraLarge`), which change the size of your graffiti.
+In the mod folder there's a `CustomGraffiti` folder. (This can be found in your mod manager as the "Browse data folder" option.) <br/>
+In the `CustomGraffiti` folder, you can place your images into four different folders (`Small`, `Medium`, `Large`, and `ExtraLarge`), which change the size of your graffiti. <br/>
 
-`Small` graffiti will be randomized by default and do not require a combo.
+`Small` graffiti will be randomized by default and do not require a combo. <br/>
 
-For `Medium`, `Large`, and `ExtraLarge` graffiti, the **file name needs to start with your desired combo**.
+For `Medium`, `Large`, and `ExtraLarge` graffiti, the **file name needs to start with your desired combo**. <br/>
 
 The file format for graffiti is as follows where `XXXXXX` is your desired combo in **unique** numbers: <br/>
 `Medium`: `XXXX_Name.png` <br/>

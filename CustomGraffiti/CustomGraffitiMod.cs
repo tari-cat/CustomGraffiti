@@ -238,7 +238,7 @@ namespace CustomGraffiti
 
             Log.LogWarning("Initialized.");
 
-            string graffitiFolder = "Graffiti";
+            string graffitiFolder = "CustomGraffiti";
 
             string graffitiFolderPath = $"{Paths.BepInExRootPath}\\{graffitiFolder}";
 

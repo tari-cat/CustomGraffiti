@@ -50,7 +50,7 @@ namespace CustomGraffiti.Patches
                 // No other way to approach this at the moment, but may be updated when the API updates.
                 List<CustomGraffiti> list = CustomGraffitiMod.GetCustomGraffitiByName(trickName);
                 bool isCustom = list.Count > 0;
-                CustomGraffitiMod.Log.LogInfo($"Is custom: {isCustom}");
+                //CustomGraffitiMod.Log.LogInfo($"Is custom: {isCustom}");
                 newGraffitiBonusMulti = (isCustom || graffitiTitlesDone.Contains(trickName) ? 1 : 2);
                 graffitiTitlesDone.Add(trickName);
                 traverseInstance.Field("graffitiTitlesDone").SetValue(graffitiTitlesDone);
@@ -70,7 +70,7 @@ namespace CustomGraffiti.Patches
                 }
             }
 
-            CustomGraffitiMod.Log.LogInfo($"{currentTrickPoints} / {newGraffitiBonusMulti}");
+            //CustomGraffitiMod.Log.LogInfo($"{currentTrickPoints} / {newGraffitiBonusMulti}");
 
             traverseInstance.Field("currentTrickPoints").SetValue(currentTrickPoints);
             traverseInstance.Field("newGraffitiBonusMulti").SetValue(newGraffitiBonusMulti);

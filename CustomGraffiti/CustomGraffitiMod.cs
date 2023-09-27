@@ -238,10 +238,9 @@ namespace CustomGraffiti
 
             Log.LogWarning("Initialized.");
 
-            string dir = Path.GetDirectoryName(Info.Location);
             string graffitiFolder = "Graffiti";
 
-            string graffitiFolderPath = Path.Combine(dir, graffitiFolder) + "/";
+            string graffitiFolderPath = $"{Paths.BepInExRootPath}\\{graffitiFolder}";
 
             string smallGraffitiFolder = Path.Combine(graffitiFolderPath, "Small") + "/";
             string mediumGraffitiFolder = Path.Combine(graffitiFolderPath, "Medium") + "/";

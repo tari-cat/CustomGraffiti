@@ -66,7 +66,7 @@
     <Compile Include="Patches\PatchGraffitiArtInfo.cs" />
     <Compile Include="Patches\PatchGraffitiGame.cs" />
     <Compile Include="Patches\PatchPlayer.cs" />
-    <Compile Include="PluginInfo\PluginInfo.cs" />
+    <Compile Include="PluginInfo\PluginMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

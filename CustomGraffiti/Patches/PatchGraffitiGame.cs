@@ -22,26 +22,28 @@ namespace CustomGraffiti.Patches
             if (setState != GraffitiGameState.SHOW_PIECE)
                 return true;
 
-            GraffitiGameState state = Traverse.Create(__instance).Field("state").GetValue<GraffitiGameState>();
-            float stateTimer = Traverse.Create(__instance).Field("stateTimer").GetValue<float>();
+            Traverse traverse = Traverse.Create(__instance);
+
+            GraffitiGameState state = traverse.Field("state").GetValue<GraffitiGameState>();
+            float stateTimer = traverse.Field("stateTimer").GetValue<float>();
 
             state = setState;
             stateTimer = 0f;
 
-            Traverse.Create(__instance).Field("state").SetValue(state);
-            Traverse.Create(__instance).Field("stateTimer").SetValue(stateTimer);
+            traverse.Field("state").SetValue(state);
+            traverse.Field("stateTimer").SetValue(stateTimer);
 
-            GraffitiSpot gSpot = Traverse.Create(__instance).Field("gSpot").GetValue<GraffitiSpot>();
-            GraffitiArt grafArt = Traverse.Create(__instance).Field("grafArt").GetValue<GraffitiArt>();
-            GraffitiArtInfo graffitiArtInfo = Traverse.Create(__instance).Field("graffitiArtInfo").GetValue<GraffitiArtInfo>();
-            Player player = Traverse.Create(__instance).Field("player").GetValue<Player>();
-            LineRenderer line = Traverse.Create(__instance).Field("line").GetValue<LineRenderer>();
+            GraffitiSpot gSpot = traverse.Field("gSpot").GetValue<GraffitiSpot>();
+            GraffitiArt grafArt = traverse.Field("grafArt").GetValue<GraffitiArt>();
+            GraffitiArtInfo graffitiArtInfo = traverse.Field("graffitiArtInfo").GetValue<GraffitiArtInfo>();
+            Player player = traverse.Field("player").GetValue<Player>();
+            LineRenderer line = traverse.Field("line").GetValue<LineRenderer>();
 
             FieldInfo playerCharacterField = player.GetType().GetField("character", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
             Characters character = (Characters)playerCharacterField.GetValue(player);
-            List<int> targetsHitSequence = Traverse.Create(__instance).Field("targetsHitSequence").GetValue<List<int>>();
+            List<int> targetsHitSequence = traverse.Field("targetsHitSequence").GetValue<List<int>>();
 
-            object targetsObjectArray = Traverse.Create(__instance).Field("targets").GetValue();
+            object targetsObjectArray = traverse.Field("targets").GetValue();
 
             object[] targetArray = targetsObjectArray as object[];
 
@@ -60,7 +62,7 @@ namespace CustomGraffiti.Patches
                     grafArt = graffitiArtInfo.FindByCharacter(character);
                 }
 
-                Traverse.Create(__instance).Field("grafArt").SetValue(grafArt);
+                traverse.Field("grafArt").SetValue(grafArt);
 
                 line.gameObject.SetActive(false);
                 foreach (object target in targetArray)
@@ -96,7 +98,7 @@ namespace CustomGraffiti.Patches
                     grafArt = graffitiArtInfo.FindBySequence(targetsHitSequence);
                 }
 
-                Traverse.Create(__instance).Field("grafArt").SetValue(grafArt);
+                traverse.Field("grafArt").SetValue(grafArt);
             }
 
             Player.TrickType type = Player.TrickType.GRAFFITI_S;

@@ -16,9 +16,11 @@ namespace CustomGraffiti.Patches
         [HarmonyPostfix]
         static void Postfix(AppGraffiti __instance)
         {
-            List<GraffitiAppEntry> graffitiList = Traverse.Create(__instance).Property("GraffitiArt").GetValue<List<GraffitiAppEntry>>();
+            Traverse traverse = Traverse.Create(__instance);
 
-            GraffitiScrollView m_ScrollView = Traverse.Create(__instance).Field("m_ScrollView").GetValue<GraffitiScrollView>();
+            List<GraffitiAppEntry> graffitiList = traverse.Property("GraffitiArt").GetValue<List<GraffitiAppEntry>>();
+
+            GraffitiScrollView m_ScrollView = traverse.Field("m_ScrollView").GetValue<GraffitiScrollView>();
 
             List<CustomGraffiti> customGraffiti = CustomGraffitiMod.LoadedGraffiti;
 
@@ -38,11 +40,11 @@ namespace CustomGraffiti.Patches
                 graffitiList.Add(graffiti.AppEntry);
             }
 
-            Traverse.Create(__instance).Property("GraffitiArt").SetValue(graffitiList);
+            traverse.Property("GraffitiArt").SetValue(graffitiList);
 
             m_ScrollView.SetListContent(graffitiList.Count);
 
-            Traverse.Create(__instance).Field("m_ScrollView").SetValue(m_ScrollView);
+            traverse.Field("m_ScrollView").SetValue(m_ScrollView);
         }
     }
 }

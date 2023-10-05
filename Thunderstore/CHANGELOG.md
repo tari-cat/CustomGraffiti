@@ -11,3 +11,6 @@ Initial release.
 - Rename the custom graffiti folder from Graffiti -> CustomGraffiti
 - Update the README to account for this change
 - Add a changelog!
+
+## 1.0.3
+- Remove graffiti app entries that cannot be sprayed

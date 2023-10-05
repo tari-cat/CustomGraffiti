@@ -18,11 +18,26 @@ namespace CustomGraffiti.Patches
         {
             Traverse traverse = Traverse.Create(__instance);
 
-            List<GraffitiAppEntry> graffitiList = traverse.Property("GraffitiArt").GetValue<List<GraffitiAppEntry>>();
+            Traverse<List<GraffitiAppEntry>> graffitiList = traverse.Property<List<GraffitiAppEntry>>("GraffitiArt");
 
-            GraffitiScrollView m_ScrollView = traverse.Field("m_ScrollView").GetValue<GraffitiScrollView>();
+            Traverse<GraffitiScrollView> m_ScrollView = traverse.Field<GraffitiScrollView>("m_ScrollView");
 
             List<CustomGraffiti> customGraffiti = CustomGraffitiMod.LoadedGraffiti;
+
+            List<GraffitiAppEntry> graffitiAppEntries = graffitiList.Value;
+
+            for (int i = 0; i < graffitiAppEntries.Count; i++)
+            {
+                for (int j = 0; j < customGraffiti.Count; j++)
+                {
+                    if (graffitiAppEntries[i].Combos == customGraffiti[j].combos)
+                    {
+                        graffitiAppEntries.RemoveAt(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
 
             for (int i = 0; i < customGraffiti.Count; i++)
             {
@@ -37,14 +52,12 @@ namespace CustomGraffiti.Patches
                     continue;
                 }
 
-                graffitiList.Add(graffiti.AppEntry);
+                graffitiAppEntries.Add(graffiti.AppEntry);
             }
 
-            traverse.Property("GraffitiArt").SetValue(graffitiList);
+            graffitiList.Value = graffitiAppEntries;
 
-            m_ScrollView.SetListContent(graffitiList.Count);
-
-            traverse.Field("m_ScrollView").SetValue(m_ScrollView);
+            m_ScrollView.Value.SetListContent(graffitiAppEntries.Count);
         }
     }
 }

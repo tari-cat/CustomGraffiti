@@ -14,3 +14,6 @@ Initial release.
 
 ## 1.0.3
 - Remove graffiti app entries that cannot be sprayed
+
+## 1.0.4
+- Possible bugfix for older versions of the game (GiveRep)

@@ -118,11 +118,23 @@ namespace CustomGraffiti.Patches
             player.DoTrick(type, grafArt.title);
             bool oldBottomWasClaimedByPlayableCrew = gSpot.bottomCrew == Crew.PLAYERS || gSpot.bottomCrew == Crew.ROGUE;
 
+            Type graffitiSpotType = gSpot.GetType();
+
             //gSpot.Paint(Crew.PLAYERS, grafArt, null);
-            MethodInfo paintMethod = gSpot.GetType().GetMethod("Paint", BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo paintMethod = graffitiSpotType.GetMethod("Paint", BindingFlags.NonPublic | BindingFlags.Instance);
             paintMethod.Invoke(gSpot, new object[] { Crew.PLAYERS, grafArt, null });
 
-            gSpot.GiveRep(false, oldBottomWasClaimedByPlayableCrew);
+            MethodInfo giveRepMethod = graffitiSpotType.GetMethod("GiveRep", BindingFlags.Public | BindingFlags.Instance);
+            if (giveRepMethod.GetParameters().Length == 0)
+            {
+                giveRepMethod.Invoke(gSpot, null);
+                //gSpot.GiveRep(); for older versions of the game
+            }
+            else
+            {
+                giveRepMethod.Invoke(gSpot, new object[] { false, oldBottomWasClaimedByPlayableCrew });
+                //gSpot.GiveRep(false, oldBottomWasClaimedByPlayableCrew); for newer versions of the game
+            }
 
             MethodInfo setStateVisualMethod = __instance.GetType().GetMethod("SetStateVisual", BindingFlags.NonPublic | BindingFlags.Instance);
             setStateVisualMethod.Invoke(__instance, new object[] { state });

@@ -18,5 +18,5 @@ Initial release.
 ## 1.0.4
 - Possible bugfix for older versions of the game (GiveRep)
 
-## 1.0.4.1
+## 1.0.5
 - Updated README, thanks to [USBMassStorageDevice](https://github.com/USBMassStorageDevice)

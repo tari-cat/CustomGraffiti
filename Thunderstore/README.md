@@ -22,7 +22,7 @@ The mod supports **.jpg** and **.png** files, with .png recommended so your graf
 
 1.  Install the Mod, preferably using r2modman.
 2.  Start the game.
-3.  Load a save. This should create the `%AppData%\r2modmanPlus-local\BombRushCyberfunk\profiles\<profile>\BepInEx\CustomGraffiti\<sizes>` folders.
+3.  Load a save. This should create the `%AppData%\r2modmanPlus-local\BombRushCyberfunk\profiles\<profile>\BepInEx\CustomGraffiti\<sizes>` folders (Windows systems).
 4.  Look in your BepInEx mod/profile folder. In r2modman, go to `Settings > Profiles > Browse profile folder` to take you there (use `Browse data Folder` if you are not using profiles).
 
 ### Preparing Images
@@ -67,8 +67,8 @@ Remember, custom graffiti files ...
 
 ## Known Issues
 
-*  Having any `Small` graffiti **will effectively disable all character-specific graffiti**. If you want to customize character-specific graffiti, that is the job of another mod designed to handle character-specific settings (for example, DripRemix).
-*  **Removed custom graffiti will render as an off-white rectangle**. Disabling the mod also will cause this.
+*  Having any `Small` graffiti **will effectively disable all character-specific graffiti**. If you do not want this, DripRemix is more suited for character-specific settings.
+*  **Removed custom graffiti will render as a blanked off-white rectangle**. Disabling the mod will also cause blank rectangles.
 *  While this mod is SlopCrew/Multiplayer safe — **tricks have no multiplier for new custom graffiti**.
 *  If your `M/L/XL` graffiti shows up in the in-game phone menu, but the **game crashes when you try to inspect it**, you may have formatted your file name incorrectly:
    *  Are all of your digits unique and within range?
@@ -76,6 +76,6 @@ Remember, custom graffiti files ...
    *  Do you have a **duplicate name**? Combos can be duplicated to randomize graffiti, but the "name" of the graffiti after the underscore should be unique.
    *  Did you put in the correct number of digits? 4 digits for Medium, 5 for Large, and 6 for ExtraLarge (the center does not count)!
 
-## How to report issues
+### How to report issues
 
 Please go to the [GitHub](https://github.com/tari-cat/CustomGraffiti) page to make an issue. Thank you!

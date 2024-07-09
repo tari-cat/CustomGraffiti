@@ -5,6 +5,19 @@ The mod supports **.jpg** and **.png** files, with .png recommended so your graf
 
 ## How to add Graffiti
 
+### tl;dr
+
+1.  Install the mod.
+2.  Start the game to create the `CustomGraffiti` folder in your `BepInEx` mod folder.
+3.  Add images into:
+    * `CustomGraffiti\Small` to replace all character sprays.
+    * `CustomGraffiti\Medium` with the file name formatted to be `1234_Graffiti Name.png`.
+    * `CustomGraffiti\Large` with the file name formatted to be `12345_Graffiti Name.png`.
+    * `CustomGraffiti\ExtraLarge` with the file name formatted to be `123456_Graffiti Name.png`.
+    * The numbers are the combo to input. See below for more details.
+4.  Restart the game.
+5.  Look at the Graffiti app in the phone and scroll down.
+
 ### Start the game once with the Mod installed
 
 1.  Install the Mod, preferably using r2modman.
@@ -16,7 +29,7 @@ The mod supports **.jpg** and **.png** files, with .png recommended so your graf
 
 In the `CustomGraffiti` folder, you can place your images into four different folders (`Small`, `Medium`, `Large`, and `ExtraLarge`), which change the size of your graffiti.
 
-For reference, the graffiti dimensions used by the original graffiti textures are (in pixels):
+Your image will be automatically scaled to fit. If you want to optimize your image by putting in extra effort, the graffiti dimensions used by the original graffiti textures are (in pixels):
 
 | Folder       | Dimensions    | Aspect Ratio |
 | ------------ | ------------- | ------------ |
@@ -54,7 +67,7 @@ Remember, custom graffiti files ...
 
 ## Known Issues
 
-* Having any `Small` graffiti **will effectively disable all character-specific graffiti**. If you want to customize character-specific graffiti, that is the job of another mod designed to handle character-specific settings (for example, DripRemix).
+*  Having any `Small` graffiti **will effectively disable all character-specific graffiti**. If you want to customize character-specific graffiti, that is the job of another mod designed to handle character-specific settings (for example, DripRemix).
 *  **Removed custom graffiti will render as an off-white rectangle**. Disabling the mod also will cause this.
 *  While this mod is SlopCrew/Multiplayer safe — **tricks have no multiplier for new custom graffiti**.
 *  If your `M/L/XL` graffiti shows up in the in-game phone menu, but the **game crashes when you try to inspect it**, you may have formatted your file name incorrectly:

@@ -12,8 +12,8 @@ The mod supports **.jpg** and **.png** files, with .png recommended so your graf
 3.  Add images into:
     * `CustomGraffiti\Small` to replace all character sprays.
     * `CustomGraffiti\Medium` with the file name formatted to be `1234_Graffiti Name.png`.
-    * `CustomGraffiti\Large` with the file name formatted to be `12345_Graffiti Name.png`.
-    * `CustomGraffiti\ExtraLarge` with the file name formatted to be `123456_Graffiti Name.png`.
+    * `CustomGraffiti\Large` with the file name formatted to be `12345_Different Graffiti Name.png`.
+    * `CustomGraffiti\ExtraLarge` with the file name formatted to be `123456_Another Different Graffiti Name.png`.
     * The numbers are the combo to input. See below for more details.
 4.  Restart the game.
 5.  Look at the Graffiti app in the phone and scroll down.
